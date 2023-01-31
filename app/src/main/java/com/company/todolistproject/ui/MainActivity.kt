@@ -1,4 +1,4 @@
-package com.company.todolistproject
+package com.company.todolistproject.ui
 
 import android.os.Bundle
 import android.view.View
@@ -9,34 +9,47 @@ import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
-import com.company.todolistproject.FileHelper.readData
-import com.company.todolistproject.FileHelper.writeData
+import androidx.lifecycle.Observer
+import com.company.todolistproject.R
+import com.company.todolistproject.domain.Task
 
 class MainActivity : FragmentActivity() {
     var item: EditText? = null
     var add: Button? = null
     var listView: ListView? = null
-    var itemlist: MutableList<String> = mutableListOf()
-    var arrayAdapter: ArrayAdapter<String>? = null
+    lateinit var arrayAdapter: ArrayAdapter<Task>
+
+    lateinit var viewModel: MainViewModel
+
+    // M-V-C -> MVVM + clean arch
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         item = findViewById(R.id.editText)
         add = findViewById(R.id.button)
         listView = findViewById(R.id.list)
-        itemlist = readData(this)
-        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, itemlist)
+
+        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, android.R.id.text1, viewModel.tasks)
 
         listView?.setAdapter(arrayAdapter)
 
         add?.setOnClickListener(View.OnClickListener {
             val itemName = item?.getText().toString()
-            itemlist?.add(itemName)
+
+            viewModel.saveTask(itemName)
             item?.setText("")
-            writeData(itemlist, applicationContext)
-            arrayAdapter!!.notifyDataSetChanged()
         })
+
+        viewModel.tasksLiveData.observe(this, Observer {newList->
+            arrayAdapter.clear()
+            arrayAdapter.addAll(newList)
+            arrayAdapter.notifyDataSetChanged()
+        })
+
+
         listView?.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             val alert = AlertDialog.Builder(this@MainActivity)
             alert.setTitle("Delete")
@@ -44,9 +57,12 @@ class MainActivity : FragmentActivity() {
             alert.setCancelable(false)
             alert.setNegativeButton("No") { dialog, which -> dialog.cancel() }
             alert.setPositiveButton("Yes") { dialog, which ->
-                itemlist!!.removeAt(position)
-                arrayAdapter!!.notifyDataSetChanged()
-                writeData(itemlist, applicationContext)
+
+                // TODO create delete task
+
+//                itemlist!!.removeAt(position)
+//                arrayAdapter!!.notifyDataSetChanged()
+//                writeData(itemlist, applicationContext)
             }
             val alertDialog = alert.create()
             alertDialog.show()

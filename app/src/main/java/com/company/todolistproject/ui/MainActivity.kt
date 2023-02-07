@@ -7,19 +7,22 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.company.todolistproject.R
 import com.company.todolistproject.domain.Task
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
+
     var item: EditText? = null
     var add: Button? = null
     var listView: ListView? = null
     lateinit var arrayAdapter: ArrayAdapter<Task>
 
-    lateinit var viewModel: MainViewModel
+
+     val viewModel: MainViewModel by viewModels { MainViewModel.FactoryKotlinWay  }
 
     // M-V-C -> MVVM + clean arch
 
@@ -57,12 +60,7 @@ class MainActivity : FragmentActivity() {
             alert.setCancelable(false)
             alert.setNegativeButton("No") { dialog, which -> dialog.cancel() }
             alert.setPositiveButton("Yes") { dialog, which ->
-
                 // TODO create delete task
-
-//                itemlist!!.removeAt(position)
-//                arrayAdapter!!.notifyDataSetChanged()
-//                writeData(itemlist, applicationContext)
             }
             val alertDialog = alert.create()
             alertDialog.show()

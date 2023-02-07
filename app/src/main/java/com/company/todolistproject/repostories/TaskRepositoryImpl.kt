@@ -19,4 +19,14 @@ class TaskRepositoryImpl(private val context: Context) : TaskRepository {
             Task(it)
         }
     }
+
+    override fun deleteTask(task: Task) {
+        val tasks = requireNotNull(sharedPref.getStringSet("tasks", mutableSetOf())).toMutableSet()
+        val isDeleted = tasks.removeIf { name ->
+            name == task.name
+        }
+
+        sharedPref.edit().putStringSet("tasks", tasks).apply()
+
+    }
 }

@@ -8,4 +8,6 @@ interface TaskRepository {
 
     fun getTasks(): List<Task>
 
+    fun deleteTask(task: Task)
+
 }

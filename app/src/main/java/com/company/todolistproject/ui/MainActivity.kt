@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
             alert.setCancelable(false)
             alert.setNegativeButton("No") { dialog, which -> dialog.cancel() }
             alert.setPositiveButton("Yes") { dialog, which ->
-                // TODO create delete task
+
+                viewModel.deleteTask(arrayAdapter.getItem(position))
             }
             val alertDialog = alert.create()
             alertDialog.show()

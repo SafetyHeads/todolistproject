@@ -2,24 +2,10 @@ package com.company.todolistproject.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.company.todolistproject.MyApplication
 import com.company.todolistproject.domain.Task
 import com.company.todolistproject.usecases.*
 
 class MainViewModel(private val saveTask: SaveTask, private val getTasks: GetTasks, private val deleteTask: DeleteTask) : ViewModel() {
-
-    companion object {
-
-        val FactoryKotlinWay: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val taskRepository = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication).taskRepository
-                MainViewModel(saveTask = SaveTaskImpl(taskRepository), getTasks = GetTaskImpl(taskRepository), deleteTask = DeleteTaskImpl(taskRepository))
-            }
-        }
-    }
 
 
     var tasks: List<Task> = getTasks.getList()
@@ -31,7 +17,7 @@ class MainViewModel(private val saveTask: SaveTask, private val getTasks: GetTas
         tasksLiveData.postValue(getTasks.getList())
     }
 
-    fun deleteTask(task: Task?){
+    fun deleteTask(task: Task?) {
         deleteTask.delete(task, object : DeleteTaskImpl.DeleteCallback {
             override fun onSuccess() {
                 tasksLiveData.postValue(getTasks.getList())

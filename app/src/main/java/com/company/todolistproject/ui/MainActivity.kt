@@ -7,12 +7,12 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.company.todolistproject.R
 import com.company.todolistproject.domain.Task
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var arrayAdapter: ArrayAdapter<Task>
 
 
-     val viewModel: MainViewModel by viewModels { MainViewModel.FactoryKotlinWay  }
+     private val viewModel: MainViewModel by viewModel()
 
     // M-V-C -> MVVM + clean arch
 
